@@ -1,0 +1,29 @@
+---
+- name: soramitsu
+  hosts: aws
+  gather_facts: no
+  become: true
+  become_user: ubuntu
+  become_method: sudo
+  pre_tasks:
+  - name: Install Python
+    raw: python3 --version || (sudo apt -y update && sudo apt install -y python3)
+
+  tasks:
+  # Create dir
+  - name: Create directories
+    file:
+      path: "/home/ubuntu/python"
+      state: directory
+
+  # Content copy
+  - name: Copy files
+    copy:
+      src: "/home/arkadybilalov/soramitsu/python"
+      dest: "/home/ubuntu/python"
+
+  - name: Run server
+    ansible.builtin.shell: |
+      ./root/python/mow_time.py
+
+...
